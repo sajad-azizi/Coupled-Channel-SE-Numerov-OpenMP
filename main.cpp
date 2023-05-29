@@ -100,7 +100,7 @@ int main(){
         pot_out.close();
     }*/
     
-    /*cout  << "i_match " << eigenvalues.i_match << "\t" << eigenvalues.gsEnergy << endl;
+    cout  << "i_match " << eigenvalues.i_match << "\t" << eigenvalues.gsEnergy << endl;
     Wavefunctions wavefunctions(&equations, &parameters);
     wavefunctions.calculate_eigenfunction(eigenvalues.gsEnergy, eigenvalues.i_match);
     wavefunctions.Normalization(wavefunctions.eigfunc);
@@ -148,7 +148,7 @@ int main(){
     //wavefunctions.calculate_final_continumm_states(A, B, Energy);
     cout << "running is done.\n"<< endl;
     
-    */
+    
     
     return 0;
 }
