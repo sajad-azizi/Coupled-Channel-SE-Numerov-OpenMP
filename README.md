@@ -12,8 +12,7 @@ This code calculates bound states and continuum states for an arbitrary anisotro
 
 
 
-
-
+The potential matrix integration is implemented using Guass-Legender quadrature since the integrand is a highly oscillating function.
 
 
 
