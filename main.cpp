@@ -125,8 +125,8 @@ int main(){
     wavefunctions.calculate_A_B_matrices(A,B,Energy);
     cout <<"\n A:\n"<<A<<endl;
     //cout <<"\n A.inverse():\n"<<A.inverse()<<endl;
-    K = B*A.inverse();
-    Eigen::MatrixXcd S = (In+I*K)*(In-I*K).inverse();
+    K = B*A.inverse(); //K-matrix (reaction matrix)
+    Eigen::MatrixXcd S = (In+I*K)*(In-I*K).inverse(); // scattering matrix.It's a unitary matrix UUT=I
    // cout <<"\n S:\n"<<S<<endl;
     
     Eigen::MatrixXcd unitary = S.conjugate().transpose()*S;
