@@ -1,10 +1,16 @@
 # Coupled-Channel Schrödinger Equation
 
-This code solves a Coupled-Channel Schrödinger Equation in 2 dimenstional and it is simply can be upgraded to a full 3D.
+This code solves a coupled-channel Schrödinger equation in two dimensions, and it can simply be upgraded to full 3D.
 
 
-Here we used Johnson renormalized Numerov Method [1] , which is a convinient method, to solve this equation and caculate bound state accuratly.
-However, we modified the algorithm for the boundary condition which makes it very accurate in caculating bound state energy. For more information regarding this method and the way we implemented it, the interested reader referes to the Appendix A of my PhD thesis.
+Here we used Johnson's renormalized Numerov Method [1], which is a convenient method, to solve this equation and calculate the bound state accurately.
+However, we modified the algorithm for the boundary condition, which makes it very accurate in caculating bound state energy. For more information regarding this method and the way we implemented it, the interested reader is referred to Appendix A of my PhD thesis.
+
+
+This code calculates bound states and continuum states for an arbitrary anisotropic potential.
+
+
+
 
 
 
