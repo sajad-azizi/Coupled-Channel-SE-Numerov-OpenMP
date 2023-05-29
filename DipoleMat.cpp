@@ -77,7 +77,7 @@ void DipoleMat::real_dipole_matrix_element(std::vector<dcompx> &d_real){
     
     std::vector<double> roots(Nroots,0.0);
     std::vector<double> weights(Nroots,0.0);
-    std::ifstream fin("/data/finite/sazizi/new_non_adiabatic/forThesisi/roots_legendre_"+std::to_string(Nroots)+".dat");
+    std::ifstream fin("./roots_legendre_"+std::to_string(Nroots)+".dat");
     if(!fin.is_open()){std::cerr<<"requested file does not exist! :( \n"; exit(0);}
     for(int i = 0; i < Nroots; i++){
         fin >> roots[i] >> weights[i];
