@@ -8,6 +8,7 @@ However, we modified the algorithm for the boundary condition, which makes it ve
 
 
 This code calculates bound states and continuum states for an arbitrary anisotropic potential.
+The continuum state alse caculated and using ground state a continumm state we obtain the dipole matrix.
 
 
 
