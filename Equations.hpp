@@ -15,7 +15,7 @@ using std::cout;
 using std::endl;
 typedef std::complex<double> dcompx;
 
-#include "/data/finite/sazizi/new_non_adiabatic/forThesisi/Eigen/Dense"
+#include "./Eigen/Dense"
 
 #include "./Potentials.hpp"
 

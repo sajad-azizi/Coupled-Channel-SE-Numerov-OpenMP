@@ -18,7 +18,7 @@ typedef std::complex<double> dcompx;
 constexpr dcompx I{0.0, 1.0};
 constexpr dcompx zero{0.0,0.0};
 
-#include "/data/finite/sazizi/new_non_adiabatic/forThesisi/Eigen/Dense"
+#include "./Eigen/Dense"
 #include "./Parameters.hpp"
 
 class Potentials{
