@@ -11,9 +11,6 @@
 
 using std::cout;
 using std::endl;
-#define dmax(a,b) ((a>b)?a:b)
-#define dmin(a,b) ((a<b)?a:b)
-#define pi_ 3.1415926535897932384626433
 
 typedef std::complex<double> dcompx;
 
