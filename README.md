@@ -16,6 +16,9 @@ The continuum state alse caculated and using ground state a continumm state we o
 The potential matrix integration is implemented using Guass-Legender quadrature since the integrand is a highly oscillating function.
 
 
+Implementation:
+``` code ```
+
 
 
 [1] B. R. Johnson; The renormalized Numerov method applied to calculating bound states of the coupled‐channel Schroedinger equation. J. Chem. Phys. 15 November 1978; 69 (10): 4678–4688. https://doi.org/10.1063/1.436421
