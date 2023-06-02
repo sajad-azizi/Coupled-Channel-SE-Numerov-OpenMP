@@ -17,7 +17,13 @@ The potential matrix integration is implemented using Guass-Legender quadrature 
 
 
 Implementation:
-``` code ```
+
+
+```
+make clean
+make
+time ./main
+```
 
 
 
