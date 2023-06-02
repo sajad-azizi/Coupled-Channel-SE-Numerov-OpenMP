@@ -11,11 +11,14 @@
 
 using std::cout;
 using std::endl;
+#define dmax(a,b) ((a>b)?a:b)
+#define dmin(a,b) ((a<b)?a:b)
+#define pi_ 3.1415926535897932384626433
 
 typedef std::complex<double> dcompx;
 
 
-#include "./Eigen/Dense"
+//#include "./Eigen/Dense"
 #include <gsl/gsl_sf_coupling.h>
 #include <gsl/gsl_roots.h>
 #include <gsl/gsl_errno.h>
@@ -122,8 +125,8 @@ int main(){
     wavefunctions.calculate_A_B_matrices(A,B,Energy);
     cout <<"\n A:\n"<<A<<endl;
     //cout <<"\n A.inverse():\n"<<A.inverse()<<endl;
-    K = B*A.inverse(); //K-matrix (reaction matrix)
-    Eigen::MatrixXcd S = (In+I*K)*(In-I*K).inverse(); // scattering matrix.It's a unitary matrix UUT=I
+    K = B*A.inverse();
+    Eigen::MatrixXcd S = (In+I*K)*(In-I*K).inverse();
    // cout <<"\n S:\n"<<S<<endl;
     
     Eigen::MatrixXcd unitary = S.conjugate().transpose()*S;

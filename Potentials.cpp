@@ -1,6 +1,6 @@
 #include "./Potentials.hpp"
 
-Potentials::Potentials(Parameters *parameters){//;//(int N_grid, int channels, double dr, int Nroots, int NTHREADS, int external_parameter){
+Potentials::Potentials(Parameters *parameters):parameters(parameters){//;//(int N_grid, int channels, double dr, int Nroots, int NTHREADS, int external_parameter){
     
     this->N_grid = parameters->N_grid;
     this->channels = parameters->channels;
@@ -9,11 +9,17 @@ Potentials::Potentials(Parameters *parameters){//;//(int N_grid, int channels, d
     this->NTHREADS = parameters->NTHREADS;
     this->external_parameter = parameters->external_parameter;
     this->vphi_max = 2.0*M_PI;//(parameters->N_phi-1)*parameters->dphi;
+    this->dphi = parameters->dphi;
+    this->N_phi = parameters->N_phi;
     
     
     pot_component.resize(N_grid);
     for(int k = 0; k < N_grid; ++k)
         pot_component[k] = Eigen::MatrixXcd::Zero(channels, channels);
+
+    harmonic_basis.resize(Nroots);
+    for(int k = 0; k < Nroots; ++k)
+        harmonic_basis[k] = std::vector<dcompx>(channels,0.0);
     
 }
 
@@ -139,16 +145,121 @@ void Potentials::potMatrixElement(){
     
     std::vector<double> roots(Nroots,0.0);
     std::vector<double> weights(Nroots,0.0);
-    std::ifstream fin("./roots_legendre_"+std::to_string(int(Nroots))+".dat");
+    std::ifstream fin("/data/finite/sazizi/new_non_adiabatic/forThesisi/roots_legendre_"+std::to_string(int(Nroots))+".dat");
     if(!fin.is_open()){std::cerr<<"requested file does not exist! :( \n"; exit(0);}
     for(int i = 0; i < Nroots; i++){
         fin >> roots[i] >> weights[i];
     }
+    
+    
+    //new complete basis set
+
+    std::function<void(std::vector<double>&) > Localized_basis_set;
+    Localized_basis_set = [=](std::vector<double> &roots){
+        for(int j = 0; j < roots.size(); j++){
+            double tt = 0.5*(vphi_max-0.0) * roots[j] + (0.0 + vphi_max)/2.0;
+            for(int m = 0; m < channels; m++){
+                const int loc_m = - l_max + m;
+                dcompx sum = 0.0;
+                for(int mp = 0; mp < channels; mp++){
+                    const int loc_mp = - l_max + mp;
+                    sum += exp( I*double( loc_mp*( loc_m*( 2.0*M_PI/channels ) - tt )   ) );
+                }
+                harmonic_basis[j][m] = ( sum ); // cos(loc_m*tt)+I*sin(loc_m*tt);//
+            }
+        }
+    };
+    //Localized_basis_set(roots);
+    
+    
+    
+    
+    
+    //integrating
+    /*
+    for(int m = 0; m < channels; m++){
+        for(int mp = 0; mp < channels; mp++){
+            dcompx sum = 0.0;
+            for(int j = 0; j < N_phi; j++){
+                sum += std::conj(harmonic_basis[j][mp])*harmonic_basis[j][m]*dphi;
+            }
+            cout << m << "\t" << mp << "\t" << sum << endl;
+        }
+    }*/
+
+    /*
+    
+    std::vector<Eigen::VectorXcd> HH;
+    HH.resize(N_phi);
+    for(int k = 0; k < N_phi; ++k)
+        HH[k] = Eigen::VectorXcd::Zero(channels);
+    
+    
+    cout << N_phi << "\t" << dphi << endl;
+    
+    for(int m = 0; m < channels; m++){
+        const int loc_m = - l_max + m;
+        for(int j = 0; j < roots.size(); j++){
+        dcompx sum = 0.0;
+            for(int mp = 0; mp < channels; mp++){
+                const int loc_mp = - l_max + mp;
+                double tt = 0.5*(vphi_max-0.0) * roots[j] + (0.0 + vphi_max)/2.0;
+                HH[j](m) = exp( I*double( loc_mp*( loc_m*( 2.0*M_PI/(channels) ) )   - tt) );
+            }
+            //cout << m << "\t" << mp << "\t" << sum << endl;
+        }
+    }
+    
+    for(int m = 0; m < channels; m++){
+        const int loc_m = - l_max + m;
+        for(int mp = 0; mp < channels; mp++){
+            const int loc_mp = - l_max + mp;
+            dcompx sum22 = 0.0;
+            for(int j = 0; j < roots.size(); j++){
+                sum22 += 0.5*(vphi_max-0.0)*(HH[j](m-mp))*(weights[j]);
+            }
+        cout << m << "\t" << mp << "\t" << sum22 << endl;
+        }
+    }
+    
+    
+    for(int m = 0; m < channels; m++){
+        const int loc_m = - l_max + m;
+        for(int mp = 0; mp < channels; mp++){
+            const int loc_mp = - l_max + mp;
+            dcompx sum = 0.0;
+            for(int m1 = 0; m1 < channels; m1++){
+                const int loc_m1 = - l_max + m1;
+                for(int m2 = 0; m2 < channels; m2++){
+                    const int loc_m2 = - l_max + m2;
+                    dcompx sum22 = 0.0;
+                    for(int j = 0; j < roots.size(); j++){
+                        //sum22 += std::conj(HH[j](mp,m2))*HH[j](m,m1);
+                    }
+                    //sum += exp(I*m1*(m-mp)*( 2.0*M_PI/(channels) ) );
+                    sum += sum22;//exp( -I*double( loc_m2*( loc_mp*( 2.0*M_PI/(channels) ) )   ) )*exp( I*double( loc_m1*( loc_m*( 2.0*M_PI/(channels) ) )   ) );
+                }
+            }
+            //cout << m << "\t" << mp << "\t" << sum << endl;
+        }
+    }
+    
+    
+    */
+    //exit(0);
+    
+    
+    
 
     std::function<dcompx(double,double,int) > func;
-    func = [=](double vphi, double r, int m){ return ( cos(m*vphi)+I*sin(m*vphi) )*Potential(r,vphi);};
+    func = [=](double vphi, double r, int loc_m){
+        int m = loc_m + l_max;
+        dcompx harmonic_basis_set = cos(loc_m*vphi)+I*sin(loc_m*vphi);//harmonic_basis[j][m];//*/*/cos(loc_m*vphi)+I*sin(loc_m*vphi);
+        return harmonic_basis_set * Potential(r,vphi);
+        
+    };
     
-    std::ifstream pot_in("../pot_component_"+std::to_string(int(r_max))+"_"+std::to_string(int(channels))+".dat");
+    std::ifstream pot_in("pot_component_"+std::to_string(int(r_max))+"_"+std::to_string(int(channels))+".dat");
     if(!pot_in.is_open()){
         cout << "pot_component has not already been saved, try calculating ...\n";
         // print potential
@@ -174,12 +285,32 @@ void Potentials::potMatrixElement(){
                 for(int k = 0; k < channels; k++){
                     int loc_k = -l_max+k;
                     
-                    dcompx sum_phi = 0.0;
+                    
+                    
+                    dcompx sum12 = 0.0;
+                    for(int m1 = 0; m1 < channels; m1++){
+                        const int loc_m1 = - l_max + m1;
+                        for(int m2 = 0; m2 < channels; m2++){
+                            const int loc_m2 = - l_max + m2;
+                            
+                            dcompx sum_phi = 0.0;
+                            for(int j = 0; j < roots.size(); j++){
+                                double tt = 0.5*(vphi_max-0.0) * roots[j] + (0.0 + vphi_max)/2.0;
+                                sum_phi += 0.5*(vphi_max-0.0)*(func(tt,r,loc_m2-loc_m1))*(weights[j]);
+                            }
+        
+                            sum12 += exp( I* double( loc_m*loc_m1 - loc_k*loc_m2  )*double(2.0*M_PI/(channels)) )*sum_phi/(channels);
+                        }
+                    }
+                    
+                    
+                    /*dcompx sum_phi = 0.0;
                     for(int j = 0; j < roots.size(); j++){
                         double tt = 0.5*(vphi_max-0.0) * roots[j] + (0.0 + vphi_max)/2.0;
-                        sum_phi += 0.5*(vphi_max-0.0)*(func(tt,r,loc_m-loc_k))*(weights[j]);
-                    }
-                    dipolePot[m*channels+k][ir]=( (loc_m*loc_m-1.0/4.0)/(2.0*r*r) )*delta(loc_m,loc_k)+sum_phi/(2.0*M_PI);
+                        sum_phi += 0.5*(vphi_max-0.0)*(func(tt,r,loc_m-loc_k, j))*(weights[j]);
+                    }*/
+                    //cout << m << "\t" <<k << "\t" << sum12/(2.0*M_PI) << endl;
+                    dipolePot[m*channels+k][ir]=( (loc_m*loc_m-1.0/4.0)/(2.0*r*r) )*delta(loc_m,loc_k)+sum12/(2.0*M_PI);
                     //pot_component[ir](m,k)=( (loc_m*loc_m-1.0/4.0)/(2.0*r*r) )*delta(loc_m,loc_k)+sum_phi/(2.0*M_PI);
                 }
             }
@@ -187,6 +318,7 @@ void Potentials::potMatrixElement(){
         
         cout << "done 1\n";
 
+       // exit(0);
 
         std::ofstream pot_out("pot_component_"+std::to_string(int(r_max))+"_"+std::to_string(int(channels))+".dat");
         //omp_set_num_threads(local_NTHREADS);

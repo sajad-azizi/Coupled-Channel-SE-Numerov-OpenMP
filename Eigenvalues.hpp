@@ -1,21 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <utility>
-#include <vector>
-#include <fstream>
-#include <iomanip>
-#include <functional>
-#include <algorithm>
-#include <complex>
-#include <omp.h>
 
-using std::cout;
-using std::endl;
-typedef std::complex<double> dcompx;
-
-#include "./Eigen/Dense"
 
 #include "./Equations.hpp"
 

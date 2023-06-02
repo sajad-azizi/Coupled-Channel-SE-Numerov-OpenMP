@@ -19,6 +19,7 @@ constexpr dcompx I{0.0, 1.0};
 constexpr dcompx zero{0.0,0.0};
 
 #include "./Eigen/Dense"
+
 #include "./Parameters.hpp"
 
 class Potentials{
@@ -53,4 +54,8 @@ class Potentials{
         // number of roots of Gauss-Legender integration
         int Nroots;
         double vphi_max;//angle part
+        double dphi;
+        double N_phi;
+        
+        std::vector<std::vector<dcompx> > harmonic_basis;
 };
