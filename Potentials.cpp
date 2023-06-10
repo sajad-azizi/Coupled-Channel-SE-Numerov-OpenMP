@@ -285,9 +285,10 @@ void Potentials::potMatrixElement(){
                 for(int k = 0; k < channels; k++){
                     int loc_k = -l_max+k;
                     
-                    
-                    
                     dcompx sum12 = 0.0;
+                    
+                    /* //different basis sets
+                     * 
                     for(int m1 = 0; m1 < channels; m1++){
                         const int loc_m1 = - l_max + m1;
                         for(int m2 = 0; m2 < channels; m2++){
@@ -301,14 +302,13 @@ void Potentials::potMatrixElement(){
         
                             sum12 += exp( I* double( loc_m*loc_m1 - loc_k*loc_m2  )*double(2.0*M_PI/(channels)) )*sum_phi/(channels);
                         }
-                    }
+                    }*/
                     
                     
-                    /*dcompx sum_phi = 0.0;
                     for(int j = 0; j < roots.size(); j++){
                         double tt = 0.5*(vphi_max-0.0) * roots[j] + (0.0 + vphi_max)/2.0;
-                        sum_phi += 0.5*(vphi_max-0.0)*(func(tt,r,loc_m-loc_k, j))*(weights[j]);
-                    }*/
+                        sum12 += 0.5*(vphi_max-0.0)*(func(tt,r,loc_m-loc_k))*(weights[j]);
+                    }
                     //cout << m << "\t" <<k << "\t" << sum12/(2.0*M_PI) << endl;
                     dipolePot[m*channels+k][ir]=( (loc_m*loc_m-1.0/4.0)/(2.0*r*r) )*delta(loc_m,loc_k)+sum12/(2.0*M_PI);
                     //pot_component[ir](m,k)=( (loc_m*loc_m-1.0/4.0)/(2.0*r*r) )*delta(loc_m,loc_k)+sum_phi/(2.0*M_PI);
